@@ -173,9 +173,8 @@
             <a class="nav-link" href="#">
               <i class="icon-grid"></i>
             </a>
-          </li>
           <li class="nav-item d-none d-lg-block">
-            <a class="nav-link" href="logout.php">
+            <a class="nav-link" href="logout.php" title="logout">
               <div class="btn btn-warning">Logout</div>
             </a>
           </li>

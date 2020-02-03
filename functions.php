@@ -23,6 +23,16 @@ function total_deposit(){
   return $total_deposit['deposit'];
 }
 
+//Total Deposit individul
+function total_deposit_individula($id){
+  global $db_connect;
+  $total_query = "SELECT SUM(deposit) AS deposit FROM members WHERE id = '$id' AND delete_status = 1";
+  $total_deposit_to_db = mysqli_query($db_connect, $total_query);
+  $total_deposit = mysqli_fetch_assoc($total_deposit_to_db);
+
+  return $total_deposit['deposit'];
+}
+
 //Total Consumption
 function total_consumption(){
   global $db_connect;
@@ -54,7 +64,27 @@ function total_member(){
   return $total_member['id'];
 }
 
-//Total member
+//Total Meal
+function total_meal(){
+  global $db_connect;
+  $total_query = "SELECT SUM(total_meal) AS total_meal FROM members WHERE delete_status = 1";
+  $total_meal_to_db = mysqli_query($db_connect, $total_query);
+  $total_meal = mysqli_fetch_assoc($total_meal_to_db);
+
+  return $total_meal['total_meal'];
+}
+
+//Total Meal for individula
+function total_meal_individula($id){
+  global $db_connect;
+  $total_query = "SELECT SUM(total_meal) AS total_meal FROM members WHERE id = '$id' AND delete_status = 1";
+  $total_meal_to_db = mysqli_query($db_connect, $total_query);
+  $total_meal = mysqli_fetch_assoc($total_meal_to_db);
+
+  return $total_meal['total_meal'];
+}
+
+//Total Cook  salary
 function cook_salary(){
   global $db_connect;
   $total_query = "SELECT SUM(cook_salary) AS cook_salary FROM cooks WHERE delete_status = 1";
@@ -68,9 +98,13 @@ function cook_salary(){
 // Cook bill insert to main Table
 function cook_bill_insert() {
   global $db_connect;
-  $x =  cook_salary() / total_member();
-  $update_query = "UPDATE members SET cooker_bill = '$x'";
-  mysqli_query($db_connect, $update_query);
+  if(total_member() > 0) {
+    $x =  cook_salary() / total_member();
+    $update_query = "UPDATE members SET cooker_bill = '$x'";
+    mysqli_query($db_connect, $update_query);
+
+  }
+
 }
 //cock bill inserted
 cook_bill_insert();
@@ -85,19 +119,48 @@ function single_diposit_insert($id){
 
   $insert_to_main = "UPDATE members SET deposit = '$total_deposit' WHERE id = '$id'";
   mysqli_query($db_connect, $insert_to_main);
+} 
+
+
+//Meal Rate Calculation and insert into main table;
+function meal_rate(){
+  global $db_connect;
+
+  $total_consumption = total_consumption();
+  $total_member = total_meal();
+
+  if( (total_meal() > 0) ){
+    $meal_rate = total_consumption() / total_meal();
+    $insert_to_main = "UPDATE members SET meal_rate = '$meal_rate'";
+    mysqli_query($db_connect, $insert_to_main);
+  
+    return $meal_rate;
+  }
+
+
 }
 
 
 
+// Final Calculation for Reporting
+function final_calculation($id){
+  global $db_connect;
 
+  $total_deposit = total_deposit_individula($id);
+  $total_meal = total_meal_individula($id);
+  $meal_rate = meal_rate();
+  $bill = $total_meal * meal_rate();
 
+  if(total_member() > 0 ) {
+    $cook_bill =  cook_salary() / total_member();
 
+    $total_bill = $bill + $cook_bill;
+    $balance =  $total_deposit - $total_bill;
 
-
-
-
-
-
-
+    $update_query = "UPDATE members SET bill = '$bill', total_bill = '$total_bill', balance = '$balance' WHERE id = '$id'";
+    mysqli_query($db_connect, $update_query);
+  
+  }
+}
 
 ?>

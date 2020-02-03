@@ -51,6 +51,8 @@ $member_mobile = mysqli_real_escape_string($db_connect, $member_mobile);
       mysqli_query($db_connect, $insert_to_master_query);
       
       $success_msg = "One new member add successfully";
+
+      header("location: dashboard.php");
     }
 
 

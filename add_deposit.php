@@ -55,8 +55,11 @@ $total_deposit = mysqli_real_escape_string($db_connect, $total_deposit);
 
        //insert deposit to main tabel
        single_diposit_insert($member_id);
+
+       //update information to main table
+      //  final_calculation($member_id);
        
-      $success_msg = $member_name."s Dposit Successfull";
+      $success_msg = $member_name."'s Dposit Successfull";
     }
 
   }

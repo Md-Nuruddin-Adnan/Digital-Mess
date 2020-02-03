@@ -18,7 +18,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="dashboard.php">
-                <i class="icon-rocket menu-icon"></i>
+                <i class="icon-home menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
                 <span class="badge badge-success">New</span>
               </a>
@@ -32,7 +32,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="login_process/consumption_login.php">
-              <i class="icon-briefcase menu-icon"></i>
+              <i class="icon-chart menu-icon"></i>
                 <span class="menu-title">Consumptoin</span>
               </a> 
             </li>
@@ -44,15 +44,29 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="login_process/add_deposit_login.php">
-              <i class="icon-briefcase menu-icon"></i>
+              <i class="icon-wallet menu-icon"></i>
                 <span class="menu-title">Add Deposit</span>
               </a> 
             </li>
             <li class="nav-item">
               <a class="nav-link" href="login_process/todays_shopping_login.php">
-              <i class="icon-briefcase menu-icon"></i>
+              <i class="icon-basket-loaded menu-icon"></i>
                 <span class="menu-title">Todays Shopping</span>
               </a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="#trash" aria-expanded="false" aria-controls="trash">
+                <i class="icon-trash menu-icon"></i>
+                <span class="menu-title">Trash</span>
+                <span class="badge badge-danger">3</span>
+              </a>
+              <div class="collapse" id="trash">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item d-none d-lg-block"> <a class="nav-link" href="consumption_trash_view.php">Consumption</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="pages/layout/rtl-layout.html">RTL</a></li>
+                  <li class="nav-item d-none d-lg-block"> <a class="nav-link" href="pages/layout/horizontal-menu.html">Horizontal Menu</a></li>
+                </ul>
+              </div>
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="collapse" href="#page-layouts" aria-expanded="false" aria-controls="page-layouts">
@@ -184,6 +198,12 @@
               <a class="nav-link" href="pages/apps/gallery.html">
                 <i class="icon-picture menu-icon"></i>
                 <span class="menu-title">Gallery</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout.php">
+                <i class="icon-power menu-icon"></i>
+                <span class="menu-title">Logout</span>
               </a>
             </li>
           </ul>

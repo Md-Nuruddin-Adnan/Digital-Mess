@@ -9,7 +9,7 @@ require_once('includes/dashboard/header.php');
 require_once('functions.php');
 
 //Total members data
-$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 1";
+$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 2";
 $datas = mysqli_query($db_connect, $show_consumption_query);
 
 ?>
@@ -46,7 +46,7 @@ require_once('includes/dashboard/left_sidebar.php');
 
 <div class="card">
     <div class="card-header text-center text-dark bg-white" >
-      <h2> Total Consumption </h2>
+      <h2> Trashed Consumption </h2>
     </div>
     <div class="card-body">
     <table class="table table-sm table-striped table-responsive-xl table-bordered text-nowrap">
@@ -77,10 +77,9 @@ require_once('includes/dashboard/left_sidebar.php');
             <?php
               if($data['status'] == 1):
             ?>
-              <a href="consumption_accept.php?id=<?=$data['id']?>" class="btn btn-sm btn-success">Accept</a>
-              <a href="consumption_trash.php?id=<?=$data['id']?>" class="btn btn-sm btn-danger">Delete</a>
+              <a href="consumption_restore.php?id=<?=$data['id']?>" class="btn btn-sm btn-success">Restore</a>
+              <a href="consumption_delete.php?id=<?=$data['id']?>" class="btn btn-sm btn-danger">Delete</a>
             <?php endif;?>
-            <a href="consump_details.php?id=<?=$data['id']?>" class="btn btn-sm btn-warning">Details</a>
           </td>
         </tr>
       <?php
@@ -88,7 +87,7 @@ require_once('includes/dashboard/left_sidebar.php');
         if($datas->num_rows == 0):;
       ?>
         <tr>
-          <td colspan="50" class="text-danger no_entry text-center">No entry found</td>
+          <td colspan="50" class="text-danger no_entry text-center">Nothing found</td>
         </tr>
       <?php endif;?>
       </tbody>

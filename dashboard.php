@@ -47,7 +47,15 @@ require_once('includes/dashboard/left_sidebar.php');
             <i class="mdi mdi-basket icon-lg text-success"></i>
             <div class="ml-3">
               <p class="mb-0">Total Deposit</p>
-              <h6><?=total_deposit();?> TK</h6>
+              <h6>
+                <?php 
+                  if(total_deposit() <= 0){
+                  echo '0.00';
+                  }
+                  else { echo total_deposit();}
+                ?>
+                TK
+              </h6>
             </div>
           </div>
         </div>
@@ -60,7 +68,15 @@ require_once('includes/dashboard/left_sidebar.php');
             <i class="mdi mdi-rocket icon-lg text-warning"></i>
             <div class="ml-3">
               <p class="mb-0">Total Consumption</p>
-              <h6><?=total_consumption();?> TK</h6>
+              <h6>
+                <?php 
+                  if(total_consumption() <= 0){
+                  echo '0.00';
+                  }
+                  else { echo total_consumption();}
+                ?>
+                TK
+              </h6>
             </div>
           </div>
         </div>
@@ -73,7 +89,15 @@ require_once('includes/dashboard/left_sidebar.php');
             <i class="mdi mdi-diamond icon-lg text-info"></i>
             <div class="ml-3">
               <p class="mb-0">Meal Rate</p>
-              <h6>896546</h6>
+              <h6>
+                <?php 
+                  if(number_format(meal_rate(), 3) <= 0){
+                  echo '0.00';
+                  }
+                  else { echo number_format(meal_rate(), 3);}
+                ?>
+                TK
+              </h6>
             </div>
           </div>
         </div>
@@ -86,7 +110,15 @@ require_once('includes/dashboard/left_sidebar.php');
             <i class="mdi mdi-chart-line-stacked icon-lg text-danger"></i>
             <div class="ml-3">
               <p class="mb-0">Balance</p>
-              <h6><?=total_deposit()-total_consumption();?> TK</h6>
+              <h6>
+                <?php 
+                  if((total_deposit()-total_consumption()) <= 0){
+                  echo '0.00';
+                  }
+                  else { echo total_deposit()-total_consumption();}
+                ?>
+                TK
+              </h6>
             </div>
           </div>
         </div>
@@ -109,8 +141,10 @@ require_once('includes/dashboard/left_sidebar.php');
           <th>NAME</th>
           <th>DEPOSIT</th>
           <th>TOTAL MEAL</th>
-          <th>SPENT</th>
-          <th>COOCKER BILL</th>
+          <th>MEAL RATE</th>
+          <th>BILL</th>
+          <th>COOK BILL</th>
+          <th>TOTAL BILL</th>
           <th>BALANCE</th>
           <th>ACTION</th>
         </tr>
@@ -122,13 +156,20 @@ require_once('includes/dashboard/left_sidebar.php');
       ?>
         <tr>
           <td><?=$serial++?></td>
-          <td><?=$data['id']?></td>
+          <td>
+            <?php
+            echo $id = $data['id'];
+            echo final_calculation($id);
+            ?>
+          </td>
           <td><?=$data['member_name']?></td>
           <td><?=$data['deposit']?></td>
           <td><?=$data['total_meal']?></td>
-          <td><?=$data['spent']?></td>
-          <td><?=$data['cooker_bill']?></td>
-          <td><?=$data['balance']?></td>
+          <td><?=number_format($data['meal_rate'], 2);?></td>
+          <td><?=number_format($data['bill'], 2);?></td>
+          <td><?=number_format($data['cooker_bill'], 2);?></td>
+          <td><?=number_format($data['total_bill'], 2);?></td>
+          <td><?=number_format($data['balance'], 2);?></td>
           <td>
             <a href="#" class="btn btn-sm btn-danger">Edit</a>
           </td>

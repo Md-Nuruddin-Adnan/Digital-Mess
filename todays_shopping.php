@@ -59,6 +59,16 @@ $consumption_note = mysqli_real_escape_string($db_connect, $consumption_note);
 
       $insert_query = "INSERT INTO consumption (member_id, member_name, member_mobile, total_consumption, consumption_note) VALUES ('$member_id', '$member_name', '$member_mobile', '$total_consumption ', '$consumption_note')";
        mysqli_query($db_connect, $insert_query);
+
+       //update meal rete in main table
+       meal_rate();
+
+
+       //insert into main as finla calculation
+      //  final_calculation($member_id);
+
+   
+
        
       $success_msg = "Todays shopping amout diposit successfully";
     }

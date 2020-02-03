@@ -112,7 +112,18 @@ require_once('includes/dashboard/left_sidebar.php');
             <i class="mdi mdi-chart-line-stacked icon-lg text-danger"></i>
             <div class="ml-3">
               <p class="mb-0">Bill Per Members</p>
-              <h6><?= cook_salary() / total_member();?> TK</h6>
+              <h6>
+                <?php 
+                  if(total_member() > 0) {
+                    $cook_bill_per_person = cook_salary() / total_member();
+                    echo $cook_bill_per_person;
+                  }
+                  else {
+                    echo "0.00";
+                  }
+                ?>
+                TK
+              </h6>
             </div>
           </div>
         </div>
@@ -211,7 +222,6 @@ require_once('includes/dashboard/left_sidebar.php');
     </div>
   </div>
 <!-- ===// end of form === -->
-
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="container-fluid clearfix">
