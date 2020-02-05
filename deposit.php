@@ -1,9 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['login_success'])){
-  header("location: index.php");
-}
-
+require_once('includes/auth.php');
 require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');
@@ -72,7 +68,13 @@ require_once('includes/dashboard/left_sidebar.php');
           <td><?=$data['deposit_amount']?></td>
           <td><?=$data['deposit_date']?></td>
           <td>
-            <a href="#" class="btn btn-sm btn-danger">Update</a>
+            <?php
+              if($data['status'] == 1):
+            ?>
+              <a href="deposit_accept.php?id=<?=$data['id']?>" class="btn btn-sm btn-success">Accept</a>
+              <a href="deposit_trash.php?id=<?=$data['id']?>" class="btn btn-sm btn-danger">Delete</a>
+            <?php endif;?>
+            <a href="consump_details.php?id=<?=$data['id']?>" class="btn btn-sm btn-warning">Details</a>
           </td>
         </tr>
       <?php

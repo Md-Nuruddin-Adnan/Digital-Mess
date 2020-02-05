@@ -1,9 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['login_success'])){
-  header("location: index.php");
-}
-
+require_once('includes/auth.php');
 require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');
@@ -36,15 +32,21 @@ $member_mobile = mysqli_real_escape_string($db_connect, $member_mobile);
   else if(empty($member_mobile)){
     $number_err = "Please enter mobile number";
   }
-  else if(!filter_var($member_mobile, FILTER_SANITIZE_NUMBER_INT) || strlen($member_mobile) < 11){
+  else if(!filter_var($member_mobile, FILTER_SANITIZE_NUMBER_INT) || (strlen($member_mobile) < 11 || strlen($member_mobile) > 11 )){
     $number_err = "Please enter a valid number";
   }
   else {
     $show_query = "SELECT * FROM members WHERE member_email = '$member_email'";
     $datas = mysqli_query($db_connect, $show_query);
 
+    $show_query_for_number = "SELECT * FROM members WHERE  member_mobile = '$member_mobile'";
+    $number_datas = mysqli_query($db_connect, $show_query_for_number);
+
     if(!$datas->num_rows == 0){
       $email_err = "This email is already used";
+    }
+    else if (!$number_datas->num_rows == 0){
+      $number_err = "This number is already used";
     }
     else {
       $insert_to_master_query = "INSERT INTO members (member_name, member_email, member_mobile) VALUES ('$member_name', '$member_email', '$member_mobile')";

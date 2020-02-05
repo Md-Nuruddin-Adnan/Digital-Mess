@@ -5,8 +5,8 @@ require_once('includes/dashboard/header.php');
 require_once('functions.php');
 
 //Total members data
-$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 2";
-$datas = mysqli_query($db_connect, $show_consumption_query);
+$show_deposit_query = "SELECT * FROM deposits WHERE delete_status = 2";
+$datas = mysqli_query($db_connect, $show_deposit_query);
 
 ?>
 
@@ -42,7 +42,7 @@ require_once('includes/dashboard/left_sidebar.php');
 
 <div class="card">
     <div class="card-header text-center text-dark bg-white" >
-      <h2> Trash Consumption </h2>
+      <h2> Trash Deposit Amount </h2>
     </div>
     <div class="card-body">
     <table class="table table-sm table-striped table-responsive-xl table-bordered text-nowrap">
@@ -51,8 +51,7 @@ require_once('includes/dashboard/left_sidebar.php');
           <th>SL. NO</th>
           <th>ID. NO</th>
           <th>NAME</th>
-          <th>TOTAL CONSUMPTION</th>
-          <th>CONSUMPTION MESSAGE</th>
+          <th>DEPOSIT AMOUNT</th>
           <th>DATE</th>
           <th>ACTION</th>
         </tr>
@@ -65,16 +64,15 @@ require_once('includes/dashboard/left_sidebar.php');
         <tr>
           <td><?=$serial++?></td>
           <td><?=$data['member_id']?></td>
-          <td><?=$data['member_name']?></td>
-          <td><?=$data['total_consumption']?></td>
-          <td><?=$data['consumption_note']?></td>
-          <td><?=$data['date']?></td>
+          <td><?=$data['deposit_name']?></td>
+          <td><?=$data['deposit_amount']?></td>
+          <td><?=$data['deposit_date']?></td>
           <td>
             <?php
               if($data['delete_status'] == 2):
             ?>
-              <a href="consumption_restore.php?id=<?=$data['id']?>" class="btn btn-sm btn-success">Restore</a>
-              <a href="consumption_delete.php?id=<?=$data['id']?>" class="btn btn-sm btn-danger">Delete</a>
+              <a href="deposit_restore.php?id=<?=$data['id']?>" class="btn btn-sm btn-success">Restore</a>
+              <a href="deposit_delete.php?id=<?=$data['id']?>" class="btn btn-sm btn-danger">Delete</a>
             <?php endif;?>
           </td>
         </tr>
@@ -83,7 +81,7 @@ require_once('includes/dashboard/left_sidebar.php');
         if($datas->num_rows == 0):;
       ?>
         <tr>
-          <td colspan="50" class="text-danger no_entry text-center">Nothing found</td>
+          <td colspan="50" class="text-danger no_entry text-center">No entry found</td>
         </tr>
       <?php endif;?>
       </tbody>

@@ -24,32 +24,39 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login_process/add_member_login.php">
+              <a class="nav-link" href="add_member.php">
               <i class="icon-user-follow menu-icon"></i>
                 <span class="menu-title">Add Member</span>
                 <span class="badge badge-success">New</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login_process/consumption_login.php">
+              <a class="nav-link" href="calendar.php">
+              <i class="icon-user-follow menu-icon"></i>
+                <span class="menu-title">Calendar</span>
+                <span class="badge badge-success">New</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="consumption.php">
               <i class="icon-chart menu-icon"></i>
                 <span class="menu-title">Consumptoin</span>
               </a> 
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login_process/deposit_login.php">
+              <a class="nav-link" href="deposit.php">
               <i class="icon-briefcase menu-icon"></i>
                 <span class="menu-title">Deposit</span>
               </a> 
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login_process/add_deposit_login.php">
+              <a class="nav-link" href="add_deposit.php">
               <i class="icon-wallet menu-icon"></i>
                 <span class="menu-title">Add Deposit</span>
               </a> 
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login_process/todays_shopping_login.php">
+              <a class="nav-link" href="todays_shopping.php">
               <i class="icon-basket-loaded menu-icon"></i>
                 <span class="menu-title">Todays Shopping</span>
               </a> 
@@ -58,13 +65,18 @@
               <a class="nav-link" data-toggle="collapse" href="#trash" aria-expanded="false" aria-controls="trash">
                 <i class="icon-trash menu-icon"></i>
                 <span class="menu-title">Trash</span>
-                <span class="badge badge-danger">3</span>
+                <?php  if(total_trash_count() > 0):; ?>
+               
+                  <span class="badge badge-danger">
+                    <?php echo total_trash_count(); ?>
+                  </span>
+                <?php endif;?>
               </a>
               <div class="collapse" id="trash">
                 <ul class="nav flex-column sub-menu">
-                  <li class="nav-item d-none d-lg-block"> <a class="nav-link" href="consumption_trash_view.php">Consumption</a></li>
-                  <li class="nav-item"> <a class="nav-link" href="pages/layout/rtl-layout.html">RTL</a></li>
-                  <li class="nav-item d-none d-lg-block"> <a class="nav-link" href="pages/layout/horizontal-menu.html">Horizontal Menu</a></li>
+                  <li class="nav-item d-none d-lg-block">
+                     <a class="nav-link" href="consumption_trash_view.php"> Consumption </a></li>
+                  <li class="nav-item"> <a class="nav-link" href="deposit_trash_view.php">Deposit</a></li>
                 </ul>
               </div>
             </li>

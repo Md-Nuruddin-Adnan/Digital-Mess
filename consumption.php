@@ -1,9 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['login_success'])){
-  header("location: index.php");
-}
-
+require_once('includes/auth.php');
 require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');

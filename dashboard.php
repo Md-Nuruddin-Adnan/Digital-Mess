@@ -1,8 +1,5 @@
 <?php
-session_start();
-if(!isset($_SESSION['login_success'])){
-  header("location: index.php");
-}
+require_once('includes/auth.php');
 require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');
@@ -154,7 +151,11 @@ require_once('includes/dashboard/left_sidebar.php');
       $serial = 1;
       foreach($datas as $data):
       ?>
-        <tr>
+        <tr class="
+          <?php if($data['deposit'] < $data['total_bill'] ): ?>
+          bg-danger text-white
+          <?php endif;?>
+        ">
           <td><?=$serial++?></td>
           <td>
             <?php
@@ -171,7 +172,17 @@ require_once('includes/dashboard/left_sidebar.php');
           <td><?=number_format($data['total_bill'], 2);?></td>
           <td><?=number_format($data['balance'], 2);?></td>
           <td>
-            <a href="#" class="btn btn-sm btn-danger">Edit</a>
+            <!-- <a href="#" class="btn btn-sm btn-danger">Edit</a> -->
+            <a href="#" class="
+              <?php if($data['deposit'] < $data['total_bill'] ): ?>
+                btn btn-sm btn-danger shadow
+                <?php endif;?>
+              <?php if($data['deposit'] > $data['total_bill'] ): ?>
+                btn btn-sm btn-danger 
+              <?php endif;?>
+            ">
+              Edit
+            </a>
           </td>
         </tr>
       <?php
@@ -191,7 +202,7 @@ require_once('includes/dashboard/left_sidebar.php');
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="container-fluid clearfix">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2020 <a href="#">Digital Mess</a>. All rights reserved.</span>
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © <?php echo date("d/m/y"); ?> <a href="index.php">Digital Mess</a>. All rights reserved.</span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
           </div>
         </footer>
@@ -208,3 +219,17 @@ require_once('includes/dashboard/left_sidebar.php');
 <?php
 require_once('includes/dashboard/footer.php');
 ?>
+
+
+<style>
+/* === responsive css === */
+@media (max-width: 1400px){
+.table-responsive-xl {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+}
+</style>

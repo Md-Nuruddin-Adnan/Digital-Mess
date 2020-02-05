@@ -141,7 +141,6 @@ function meal_rate(){
 }
 
 
-
 // Final Calculation for Reporting
 function final_calculation($id){
   global $db_connect;
@@ -162,5 +161,37 @@ function final_calculation($id){
   
   }
 }
+
+
+//Total trash count from consumption table
+function consumption_trash_count(){
+  global $db_connect;
+  $total_query = "SELECT COUNT(id) AS consumption_trash_id FROM consumption WHERE delete_status = 2";
+  $total_count_to_db = mysqli_query($db_connect, $total_query);
+  $total_member = mysqli_fetch_assoc($total_count_to_db);
+
+  return $total_member['consumption_trash_id'];
+}
+
+
+//Total trash count from deposite table
+function deposit_trash_count(){
+  global $db_connect;
+  $total_query = "SELECT COUNT(id) AS deposit_trash_id FROM deposits WHERE delete_status = 2";
+  $total_count_to_db = mysqli_query($db_connect, $total_query);
+  $total_member = mysqli_fetch_assoc($total_count_to_db);
+
+  return $total_member['deposit_trash_id'];
+}
+
+
+//Total trash count from all table
+function total_trash_count(){
+ $total_trash = consumption_trash_count() + deposit_trash_count();
+ return $total_trash;
+}
+
+
+
 
 ?>
