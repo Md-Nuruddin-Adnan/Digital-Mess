@@ -3,22 +3,45 @@ require_once('includes/auth.php');
 require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');
-
-//Total members data
-$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 1";
-$datas = mysqli_query($db_connect, $show_consumption_query);
-
 ?>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+<!-- link end -->
 
+
+<style>
+
+  .fc-day-grid-event .fc-time {
+    display: none;
+  }
+
+  #calendar .fc-view-container .fc-view table tbody.fc-body tr td.fc-widget-content .fc-day-grid-container .fc-day-grid .fc-row .fc-content-skeleton table tbody tr td.fc-event-container .fc-h-event {
+    font-size: 16px;
+  }
+  #calendar .fc-view-container .fc-view table thead.fc-head tr td .fc-widget-header table thead tr th.fc-day-header,
+  #calendar .fc-header-toolbar .fc-button-group .fc-button.fc-prev-button, #calendar .fc-header-toolbar .fc-button-group .fc-button.fc-next-button {
+    background: #edf3fa;
+    color: #666;
+  }
+
+  #calendar .fc-header-toolbar {
+    padding: 0 0 30px 0;
+  }
+
+</style>
 
 <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
+<!-- partial:partials/_navbar.html -->
 <?php
 require_once('includes/dashboard/top_nav.php');
 ?>
 <!-- partial -->
-<div class="container-fluid page-body-wrapper">
+<div class="container-fluid page-body-wrapper"> 
 <div class="row row-offcanvas row-offcanvas-right">
 
 <?php
@@ -26,87 +49,115 @@ require_once('includes/dashboard/right_sidebar_with_settings.php');
 require_once('includes/dashboard/left_sidebar.php');
 ?>
 
-
-<link rel="stylesheet" href="calendar/css/fullcalendar.min.css">
-<!-- <link rel="stylesheet" href="calendar/css/bootstrap.min.css"> -->
-<link rel="stylesheet" href="calendar/css/calendar.css">
-
 <div class="content-wrapper">
 
 
-<!-- === New content start === -->
+  <script>
+   
+  $(document).ready(function() {
+   var calendar = $('#calendar').fullCalendar({
+    editable:true,
+    header:{
+     left:'prev,next today',
+     center:'title',
+     right:'month,agendaWeek,agendaDay'
+    },
+    events: 'calendar_load.php',
+    selectable:true,
+    selectHelper:true,
+    select: function(start, end, allDay)
+    {
+    
+    
+     var title = prompt("write the title");
+     if(title)
+     {
+      var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+      var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+      $.ajax({
+       url:"calendar_insert.php",
+       type:"POST",
+       data:{title:title, start:start, end:end},
+       success:function()
+       {
+        calendar.fullCalendar('refetchEvents');
+        alert("Added Successfully");
+       }
+      })
+     }
+    },
+    editable:true,
+    eventResize:function(event)
+    {
+     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+     var title = event.title;
+     var id = event.id;
+     $.ajax({
+      url:"calendar_update.php",
+      type:"POST",
+      data:{title:title, start:start, end:end, id:id},
+      success:function(){
+       calendar.fullCalendar('refetchEvents');
+       alert('Event Update');
+      }
+     })
+    },
 
-  <!-- === ? section start === -->
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-center">Calender</h1>
-          <div id="calendar"></div>
-        </div>
-          <!-- BEGIN MODAL -->
-          <div class="modal fade" id="event-modal" tabindex="-1">
-          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header text-center border-bottom-0 d-block">
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title">Add New Event</h4>
-                  </div>
-                  <div class="modal-body">
+    eventDrop:function(event)
+    {
+     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+     var title = event.title;
+     var id = event.id;
+     $.ajax({
+      url:"calendar_update.php",
+      type:"POST",
+      data:{title:title, start:start, end:end, id:id},
+      success:function()
+      {
+       calendar.fullCalendar('refetchEvents');
+       alert("Event Updated");
+      }
+     });
+    },
 
-                  </div>
-                  <div class="modal-footer border-0 pt-0">
-                      <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
-                      <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
-                  </div>
-              </div>
-          </div>
-      </div>
+    eventClick:function(event)
+    {
+     if(confirm("Are you sure you want to remove it?"))
+     {
+      var id = event.id;
+      $.ajax({
+       url:"calendar_delete.php",
+       type:"POST",
+       data:{id:id},
+       success:function()
+       {
+        calendar.fullCalendar('refetchEvents');
+        alert("Event Removed");
+       }
+      })
+     }
+    },
+
+   });
+  });
+   
+  </script>
+
+  <div class="card">
+    <div class="card-body">
+      <div id="calendar"></div>
+   </div>
+  </div>
+
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 
-          <!-- Modal Add Category -->
-          <div class="modal fade" id="add-category" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header text-center border-bottom-0 d-block">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title mt-2">Add a category</h4>
-                    </div>
-                    <div class="modal-body p-4">
-                        <form role="form">
-                            <div class="form-group">
-                                <label class="control-label">Category Name</label>
-                                <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Choose Category Color</label>
-                                <select class="form-control form-white" data-placeholder="Choose a color..." name="category-color">
-                                    <option value="success">Success</option>
-                                    <option value="danger">Danger</option>
-                                    <option value="info">Info</option>
-                                    <option value="pink">Pink</option>
-                                    <option value="primary">Primary</option>
-                                    <option value="warning">Warning</option>
-                                    <option value="inverse">Inverse</option>
-                                </select>
-                            </div>
-
-                        </form>
-
-                        <div class="text-right">
-                            <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-custom ml-1 waves-effect waves-light save-category" data-dismiss="modal">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END MODAL -->
-      </div>
-  <!-- ===//end of ? section === -->
-<!-- ===// end of new content === -->
-
-        <!-- partial:partials/_footer.html -->
-        <footer class="footer">
+      <!-- partial:partials/_footer.html -->
+      <footer class="footer">
           <div class="container-fluid clearfix">
             <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2020 <a href="dashboard.php">Digital Mess</a>. All rights reserved.</span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
@@ -123,14 +174,26 @@ require_once('includes/dashboard/left_sidebar.php');
 <!-- container-scroller -->
 
 
-  <script src="calendar/js/jquery-3.4.1.min.js"></script>
-  <script src="calendar/js/popper.js"></script>
-  <script src="calendar/js/bootstrap.min.js"></script>
-  <script src="calendar/js/jquery_ui_min.js"></script>
-  <script src="calendar/js/moment.js"></script>
-  <script src="calendar/js/fullcalendar.min.js"></script>
-  <script src="calendar/js/calendar.js"></script>
+<!-- <script src="assets/vendors/js/vendor.bundle.base.js"></script> -->
 
+ <!-- inject:js -->
+ <script src="assets/js/off-canvas.js"></script>
+  <script src="assets/js/hoverable-collapse.js"></script>
+  <script src="assets/js/misc.js"></script>
+  <script src="assets/js/settings.js"></script>
+  <script src="assets/js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="assets/js/dashboard.js"></script>
+  <!-- End custom js for this page-->
 <?php
-require_once('includes/dashboard/footer.php');
+// require_once('includes/dashboard/footer.php');
 ?>
+
+</body>
+
+</html>
+
+
+
+

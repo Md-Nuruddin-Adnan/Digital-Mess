@@ -4,6 +4,12 @@ require_once('includes/db.php');
 require_once('includes/dashboard/header.php');
 require_once('functions.php');
 
+$member_id = $_GET['id'];
+
+$member_select_query = "SELECT * FROM members WHERE id = '$member_id'";
+$member_to_db = mysqli_query($db_connect, $member_select_query);
+$member_info = mysqli_fetch_assoc($member_to_db);
+
 // form validation
 if(isset($_POST['submit'])){
 // form data validation
@@ -36,26 +42,13 @@ $member_mobile = mysqli_real_escape_string($db_connect, $member_mobile);
     $number_err = "Please enter a valid number";
   }
   else {
-    $show_query = "SELECT * FROM members WHERE member_email = '$member_email'";
-    $datas = mysqli_query($db_connect, $show_query);
+    $update_query = "UPDATE members SET member_name = '$member_name', member_email= '$member_email', member_mobile = '$member_mobile' WHERE id = '$member_id'";
+    mysqli_query($db_connect, $update_query);
+    
+    $success_msg = $_SESSION['success_msg'] = $member_info['member_name']." updated successfully";
 
-    $show_query_for_number = "SELECT * FROM members WHERE  member_mobile = '$member_mobile'";
-    $number_datas = mysqli_query($db_connect, $show_query_for_number);
+    header("location: dashboard.php");
 
-    if(!$datas->num_rows == 0){
-      $email_err = "This email is already used";
-    }
-    else if (!$number_datas->num_rows == 0){
-      $number_err = "This number is already used";
-    }
-    else {
-      $insert_to_master_query = "INSERT INTO members (member_name, member_email, member_mobile) VALUES ('$member_name', '$member_email', '$member_mobile')";
-      mysqli_query($db_connect, $insert_to_master_query);
-      
-      $success_msg = "One new member add successfully";
-
-      header("location: dashboard.php");
-    }
 
 
   }
@@ -91,39 +84,27 @@ require_once('includes/dashboard/left_sidebar.php');
 
 <div class="card">
   <div class="card-header text-center text-dark bg-white" >
-    <h2> Add New Member </h2>
+    <h2>  <?=$member_info['member_name']?></h2>
   </div>
   <div class="card-body">
     <form action="" method="POST">
       <div class="form-group">
         <label for="member_name">Name:</label>
-        <input type="text" id="member_name" class="form-control" name="member_name" 
-        <?php if(isset($member_name)) :?>
-          value="<?=$member_name;?>" 
-        <?php endif?>
-        >
+        <input type="text" id="member_name" class="form-control" name="member_name" value="<?=$member_info['member_name']?>">
         <?php if(isset($name_err)) :?>
           <div class="alert alert-danger mt-2"> <?=$name_err;?> </div>
         <?php endif?>
       </div>
       <div class="form-group">
         <label for="member_email">Email Adress:</label>
-        <input type="text" id="member_email" class="form-control" name="member_email" 
-        <?php if(isset($member_email)) :?>
-          value="<?=$member_email;?>" 
-        <?php endif?>
-        >
+        <input type="text" id="member_email" class="form-control" name="member_email" value="<?=$member_info['member_email']?>">
         <?php if(isset($email_err)) :?>
           <div class="alert alert-danger mt-2"> <?=$email_err;?> </div>
         <?php endif?>
       </div>
       <div class="form-group">
         <label for="member_mobile">Mobile Number:</label>
-        <input type="text" id="member_mobile" class="form-control" name="member_mobile" 
-        <?php if(isset($member_mobile)) :?>
-          value="<?=$member_mobile;?>" 
-        <?php endif?>
-        >
+        <input type="text" id="member_mobile" class="form-control" name="member_mobile"  value="0<?=$member_info['member_mobile']?>" >
         <?php if(isset($number_err)) :?>
           <div class="alert alert-danger mt-2"> <?=$number_err;?> </div>
         <?php endif?>

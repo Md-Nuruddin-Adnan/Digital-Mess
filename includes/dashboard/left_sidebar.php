@@ -31,10 +31,15 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="shopper_list.php">
+              <i class="icon-user-follow menu-icon"></i>
+                <span class="menu-title">Shopper List</span>
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="calendar.php">
               <i class="icon-user-follow menu-icon"></i>
                 <span class="menu-title">Calendar</span>
-                <span class="badge badge-success">New</span>
               </a>
             </li>
             <li class="nav-item">

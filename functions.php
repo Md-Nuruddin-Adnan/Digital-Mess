@@ -191,7 +191,4 @@ function total_trash_count(){
  return $total_trash;
 }
 
-
-
-
 ?>

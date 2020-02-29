@@ -123,6 +123,18 @@ require_once('includes/dashboard/left_sidebar.php');
     </div>
   </div>
 
+  <!-- === This section is for calculation purpose ==== -->
+  <ul class="d-none">
+    <?php foreach($datas as $member_datas): ?>
+    <li>
+      <?php
+       $id = $member_datas['id'];
+       final_calculation($id);
+       ?>
+    </li>
+    <?php endforeach;?>
+  </ul><!--//calculation -->
+
 <!-- === New content start === -->
 
   <div class="card">
@@ -156,13 +168,8 @@ require_once('includes/dashboard/left_sidebar.php');
           bg-danger text-white
           <?php endif;?>
         ">
-          <td><?=$serial++?></td>
-          <td>
-            <?php
-            echo $id = $data['id'];
-            echo final_calculation($id);
-            ?>
-          </td>
+          <td width="3%"><?=$serial++?></td>
+          <td width="7%"><?=$id=$data['id']?></td>
           <td><?=$data['member_name']?></td>
           <td><?=$data['deposit']?></td>
           <td><?=$data['total_meal']?></td>
@@ -173,7 +180,7 @@ require_once('includes/dashboard/left_sidebar.php');
           <td><?=number_format($data['balance'], 2);?></td>
           <td>
             <!-- <a href="#" class="btn btn-sm btn-danger">Edit</a> -->
-            <a href="#" class="
+            <a href="member_edit.php?id=<?=$id=$data['id']?>" class="
               <?php if($data['deposit'] < $data['total_bill'] ): ?>
                 btn btn-sm btn-danger shadow
                 <?php endif;?>

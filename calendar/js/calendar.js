@@ -79,7 +79,7 @@
               .append("<option value='bg-purple'>Purple</option>")
               .append("<option value='bg-primary'>Primary</option>")
               .append("<option value='bg-pink'>Pink</option>")
-              .append("<option value='bg-info'>Info</option>")
+              .append("<option value='bg-info'>Info</option>") 
               .append("<option value='bg-inverse'>Inverse</option>")
               .append("<option value='bg-warning'>Warning</option></div></div>");
           $this.$modal.find('.delete-event').hide().end().find('.save-event').show().end().find('.modal-body').empty().prepend(form).end().find('.save-event').unbind('click').click(function () {
@@ -96,7 +96,8 @@
                       start:start,
                       end: end,
                       allDay: false,
-                      className: categoryClass
+                      className: categoryClass,
+                      events: 'calendar_load.php',
                   }, true);  
                   $this.$modal.modal('hide');
               }

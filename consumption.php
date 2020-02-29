@@ -5,7 +5,7 @@ require_once('includes/dashboard/header.php');
 require_once('functions.php');
 
 //Total members data
-$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 1";
+$show_consumption_query = "SELECT * FROM consumption WHERE delete_status = 1 ORDER BY date";
 $datas = mysqli_query($db_connect, $show_consumption_query);
 
 ?>

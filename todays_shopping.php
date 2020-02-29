@@ -7,8 +7,8 @@ require_once('functions.php');
 // form validation
 if(isset($_POST['submit'])){
 // form data validation
-$id = check_data($_POST['id']);
-$id = mysqli_real_escape_string($db_connect, $id);
+$shopping_date = check_data($_POST['shopping_date']);
+$shopping_date = mysqli_real_escape_string($db_connect, $shopping_date);
 
 $member_id = check_data($_POST['member_id']);
 $member_id = mysqli_real_escape_string($db_connect, $member_id);
@@ -21,11 +21,8 @@ $consumption_note = mysqli_real_escape_string($db_connect, $consumption_note);
 
 
 //validation start
-  if(empty($id )){
-    $id_err = "Please enter ID. NO.";
-  }
-  else if(!filter_var($id , FILTER_VALIDATE_INT)){
-    $id_err = "Please enter a valid ID. NO";
+  if(empty($shopping_date)){
+    $shopping_date_err = "Please select a date";
   }
   else if(empty($member_id)){
     $number_err = "Please select a Member";
@@ -37,37 +34,26 @@ $consumption_note = mysqli_real_escape_string($db_connect, $consumption_note);
     $total_consumption_err = "Please enter a valid amount";
   }
   else if(filter_var($consumption_note, FILTER_SANITIZE_NUMBER_INT) || strlen($consumption_note) > 50){
-    $consumption_note_err = "Please enter a valid amount";
+    $consumption_note_err = "Please right a correct note";
   }
   else {
 
-    if(!($member_id == $id)){
-      $number_err = "This id is not for this name";
-    }
-    else {
-      $select_query = "SELECT * FROM members WHERE id = '$member_id' AND delete_status = 1";
-      $select_query_to_db = mysqli_query($db_connect, $select_query);
+    $select_query = "SELECT * FROM members WHERE id = '$member_id' AND delete_status = 1";
+    $select_query_to_db = mysqli_query($db_connect, $select_query);
 
-      $datas_from_members = mysqli_fetch_assoc($select_query_to_db);
+    $datas_from_members = mysqli_fetch_assoc($select_query_to_db);
 
-      $member_name = $datas_from_members['member_name'];
-      $member_mobile = $datas_from_members['member_mobile'];
+    $member_name = $datas_from_members['member_name'];
+    $member_mobile = $datas_from_members['member_mobile'];
 
-      $insert_query = "INSERT INTO consumption (member_id, member_name, member_mobile, total_consumption, consumption_note) VALUES ('$member_id', '$member_name', '$member_mobile', '$total_consumption ', '$consumption_note')";
-       mysqli_query($db_connect, $insert_query);
+    $insert_query = "INSERT INTO consumption (member_id, member_name, member_mobile, total_consumption, consumption_note, date) VALUES ('$member_id', '$member_name', '$member_mobile', '$total_consumption ', '$consumption_note', '$shopping_date')";
+     mysqli_query($db_connect, $insert_query);
 
-       //update meal rete in main table
-       meal_rate();
+     //update meal rete in main table
+     meal_rate();
 
-
-       //insert into main as finla calculation
-      //  final_calculation($member_id);
-
-   
-
-       
-      $success_msg = "Todays shopping amout diposit successfully";
-    }
+     
+    $success_msg = "Todays shopping amout diposit successfully";
 
   }
 }
@@ -102,58 +88,62 @@ require_once('includes/dashboard/left_sidebar.php');
 
 
 <!-- === New content start === -->
+<div class="row">
+  <div class="col-xl-6 col-lg-12 m-auto">
+    <div class="card">
+      <div class="card-header text-center text-dark bg-white" >
+        <h2> Todays Shoppoing </h2>
+      </div>
+      <div class="card-body">
+        <form action="" method="POST">
+          <div class="form-group">
+            <label for="shopping_daate"></label>
+            <input type="date" id="shopping_date" class="form-control" placeholder="select a date" name="shopping_date">
+            <?php if(isset($shopping_date_err)) :?>
+              <div class="alert alert-danger mt-2"> <?=$shopping_date_err;?> </div>
+            <?php endif?>
+          </div>
+          <div class="form-group">
+            <label for="member_id">Person: </label>
+            <select class="form-control" name="member_id" id="member_id">
+            <option value="">Select a person</option>
+            <?php foreach($datas as $data): ?>
+              <option value="<?=$data['id']?>"><?=$data['member_name']?></option>
+            <?php endforeach;?>
+            </select>
+            <?php if(isset($number_err)) :?>
+              <div class="alert alert-danger mt-2"> <?=$number_err;?> </div>
+            <?php endif?>
+          </div>
+          <div class="form-group">
+            <label for="total_consumption">Amount: </label>
+            <input type="text" class="form-control" name="total_consumption">
+            <?php if(isset($total_consumption_err)) :?>
+              <div class="alert alert-danger mt-2"> <?=$total_consumption_err;?> </div>
+            <?php endif?>
+          </div>
+          <div class="form-group">
+            <label for="consumption_note">Shopping Note (optional):</label>
+            <textarea name="consumption_note" id="consumption_note" rows="6" class="form-control" placeholder="write a short note..."></textarea>
+            <?php if(isset($consumption_note_err)) :?>
+              <div class="alert alert-danger mt-2"> <?=$consumption_note_err;?> </div>
+            <?php endif?>
 
-<div class="card">
-  <div class="card-header text-center text-dark bg-white" >
-    <h2> Todays Shoppoing </h2>
-  </div>
-  <div class="card-body">
-    <form action="" method="POST">
-      <div class="form-group">
-        <label for="id">ID. No: </label>
-        <input type="text" class="form-control" name="id">
-        <?php if(isset($id_err)) :?>
-          <div class="alert alert-danger mt-2"> <?=$id_err;?> </div>
-        <?php endif?>
-      </div>
-      <div class="form-group">
-        <label for="member_id">Person: </label>
-        <select class="form-control" name="member_id" id="member_id">
-        <option value="">Select a person</option>
-        <?php foreach($datas as $data): ?>
-          <option value="<?=$data['id']?>"><?=$data['member_name']?></option>
-        <?php endforeach;?>
-        </select>
-        <?php if(isset($number_err)) :?>
-          <div class="alert alert-danger mt-2"> <?=$number_err;?> </div>
-        <?php endif?>
-      </div>
-      <div class="form-group">
-        <label for="total_consumption">Amount: </label>
-        <input type="text" class="form-control" name="total_consumption">
-        <?php if(isset($total_consumption_err)) :?>
-          <div class="alert alert-danger mt-2"> <?=$total_consumption_err;?> </div>
-        <?php endif?>
-      </div>
-      <div class="form-group">
-        <label for="consumption_note">Shopping Note (optional):</label>
-        <textarea name="consumption_note" id="consumption_note" rows="6" class="form-control" placeholder="write a short note..."></textarea>
-        <?php if(isset($consumption_note_err)) :?>
-          <div class="alert alert-danger mt-2"> <?=$consumption_note_err;?> </div>
-        <?php endif?>
+            <!-- Success message -->
+            <?php if(isset( $success_msg)) :?>
+              <div class="alert alert-success mt-2"> <?= $success_msg;?> </div>
+            <?php endif?>
+          </div>
+          <div class="form-group text-center">
+            <input type="submit" value="Submit" class="btn btn-danger px-5" name="submit">
+          </div>
+        </form>
 
-        <!-- Success message -->
-        <?php if(isset( $success_msg)) :?>
-          <div class="alert alert-success mt-2"> <?= $success_msg;?> </div>
-        <?php endif?>
       </div>
-      <div class="form-group text-center">
-        <input type="submit" value="Submit" class="btn btn-danger px-5" name="submit">
       </div>
-    </form>
 
   </div>
-  </div>
+</div>
 <!-- ===// end of new content === -->
 
 <!-- partial:partials/_footer.html -->
